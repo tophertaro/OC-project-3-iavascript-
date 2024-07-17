@@ -2,7 +2,7 @@
 
 
  
-   fetchWorks();
+
 
 // (1.1) FETCH API projets architecte 
 
@@ -15,7 +15,7 @@ async function fetchWorks(){
         throw new Error("Could not fetch resource")
       } else { 
         const works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
-        console.log(works)
+        displayWorks(works) //après récupération des données, appel la fonction pour afficher les travaux
       }
       
     }
@@ -24,5 +24,43 @@ async function fetchWorks(){
       }
 }
 
+function displayWorks(works){ 
+  let gallery = document.getElementById('gallery-js'); 
+  gallery.innerHTML =''; //supprime le contenu html dans la div gallery-js
+  
+
+  let galleryContent = '';
+  works.forEach(work => {
+    galleryContent += 
+    ` <figure>
+        <img src="${work.imageUrl}" alt="${work.title}"
+        <figcaption>${work.title}</figcaption>
+      </figure>
+    `
+  });
+
+  gallery.innerHTML = galleryContent;
+
+  /* Méthode alternatif
+  works.forEach(work => {
+    const figure = document.createElement('figure')
+
+    const img = document.createElement('img')
+      img.src = work.imageUrl;
+      img.alt = work.title;
+
+
+    const figcaption = document.createElement('figcaption')
+      figcaption.textContent = work.title
+
+
+      figure.appendChild(img);
+      figure.appendChild(figcaption);
+      gallery.appendChild(figure);
+});*/
+
+}
+
+fetchWorks();
 
 
