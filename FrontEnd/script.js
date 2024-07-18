@@ -1,5 +1,6 @@
+let works = [];
 
-// (1.1) FETCH API & display projets architecte 
+// (1.1) FETCH API  
 
 async function fetchWorks() {
 
@@ -9,15 +10,18 @@ async function fetchWorks() {
       if(!response.ok){ //si reponse pas ok = lancer une erreur
         throw new Error('Could not fetch works')
       } else { 
-        const works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
+        works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
         displayWorks(works) //après récupération des données, appel la fonction pour afficher les travaux
+        
       }
-      
     }
       catch(error){ //ce bloc gère les erreurs survenue dans le bloc try
         console.error(error)
       }
 }
+
+
+// (1.1) DISPLAY PROJETS ARCHITECTE
 
 function displayWorks(works) { 
   let gallery = document.getElementById('gallery-js'); 
@@ -31,7 +35,7 @@ function displayWorks(works) {
         <img src="${work.imageUrl}" alt="${work.title}"
         <figcaption>${work.title}</figcaption>
       </figure>
-    `
+    `;
   });
 
   gallery.innerHTML = galleryContent; //valeur de galleryContent inséré dans le HTML class gallery
@@ -59,7 +63,8 @@ function displayWorks(works) {
 fetchWorks();
 
 
-// (1.2) Filtre & display par catégorie
+
+// (1.2) FETCH CATEGORIES
 
 async function fetchCategories() {
   try {
@@ -69,30 +74,57 @@ async function fetchCategories() {
         throw new Error('Could not fetch categories')
       } else {
         const categories = await response.json()
-        createFilters(categories);
+        createFilters(categories); //appel à la fonction permettant la génération des boutons
       }
   }
-  catch {
-
+  catch (error) {
+    console.error(error);
   }
 }
+// (1.2) CREATION BOUTONS FILTRE
 
-function createFilters(categories){
+function createFilters(categories) {
   let filters = document.getElementById('filters')
 
   let filtersBtn = '';
 
-  filtersBtn += `<button>Tous</button>`
+  filtersBtn += `<button data-category="all">Tous</button>`
   
+ /* autre méthode pour ajouter bouton 'Tous'
+  categories.unshift({
+  id: 0,
+  name: "Tous",
+}); */
+
   categories.forEach(category => {
     filtersBtn += 
-    ` <button>
+    ` <button data-category="${category.id}">
         ${category.name}
-      </button>`
+      </button>`;
 });
 
+// DISPLAY BOUTONS FILTRES
 filters.innerHTML = filtersBtn;
 
+// AJOUT EVENT A CHAQUE BOUTON
+document.querySelectorAll('#filters button').forEach(button => {
+  button.addEventListener('click', (event) => {
+    const categoryId = event.target.getAttribute('data-category'); // retourne l'id du bouton selectionne
+    filterGallery(categoryId);
+  });
+});
 }
 
-fetchCategories();
+fetchCategories(); // appel à la fonction permettant le fetch mais aussi le display des boutons filtres
+
+
+function filterGallery(categoryId) {
+  let filteredGallery = '';
+
+    if (categoryId === 'all') {
+      filteredGallery = works;
+    } else {
+      filteredGallery = works.filter(work => work.categoryId == categoryId);
+    }
+    displayWorks(filteredGallery);
+}
