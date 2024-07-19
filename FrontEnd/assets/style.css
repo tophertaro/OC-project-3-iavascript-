@@ -23,7 +23,7 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
-html {
+html body {
 	height: 100vh;
 }
 /* HTML5 display-role reset for older browsers */
@@ -151,8 +151,7 @@ margin: auto;
 #contact h2{
 	margin-bottom: 20px;
 }
-#contact form, 
-#login form {
+#contact form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
@@ -182,17 +181,28 @@ input[type="submit"]{
 	width: 180px;
 	text-align: center;
 	border-radius: 60px ;
+	cursor: pointer;
 }
 
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	cursor: pointer;
 }
 
 
 
+
+html {
+	background-color: #FFFEF8;
+}
+
+
+
+
 /* Login Page*/
+
 
 #login {
 	display: flex;
@@ -200,18 +210,27 @@ footer nav ul {
 	align-items: center;
 	width: 50%;
 	margin: auto;
+	margin-top: 10% ;
 }
 
 #login h2 {
 	text-align: center;
+	margin-bottom: 30px;
 }
 
-#connexion #email{
+#login-form #email{
 	width: 379px;
 }
 
+#login-form {
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	margin-top: 0;
+}
 
-#forgotten-password {
+
+#forgotten-pwd{
 	text-align: center;
 	text-decoration: underline;
 	cursor: pointer;
@@ -221,5 +240,11 @@ footer nav ul {
 	margin-top: 30px;
 	margin-bottom: 10px;
 }
+
+#login-error {
+	color: red;
+}
+
+
 
 
