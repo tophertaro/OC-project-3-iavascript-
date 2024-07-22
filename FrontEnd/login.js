@@ -24,7 +24,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
   .then(data => {
     if (data.token) {
       // Si l'authentification est réussie, stocker le token
-      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('token', data.token);
       // Rediriger vers la page d'accueil
       window.location.href = 'index.html'; // renvoi vers la page d'accueil
     } else {
@@ -36,3 +36,4 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     errorMessage();
   });
 });
+

@@ -128,3 +128,19 @@ function filterGallery(categoryId) {
     }
     displayWorks(filteredGallery);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('token')) {
+    document.querySelectorAll('.logged-in').forEach(element => {
+      element.style.display = 'flex';
+    });
+    document.getElementById('filters').style.display = 'none';
+    let loginBtn = document.getElementById('login-btn');
+    loginBtn.innerHTML = '<a href="#" onclick="logout()" style="text-decoration: none;">logout</a>';
+  }
+});
+
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = 'index.html';
+}
