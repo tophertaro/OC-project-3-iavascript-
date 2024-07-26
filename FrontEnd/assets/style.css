@@ -256,9 +256,7 @@ html {
 #edit-mode {
 	background-color: black;
 	color: white;
-	width: 100vw;
 	padding: 15px;
-	left: 0;
 	text-align: center;
 	font-size: 1.2em;
 	display: flex;
@@ -289,6 +287,7 @@ html {
 	padding-bottom: 1em;
 
 }
+
 
 
 

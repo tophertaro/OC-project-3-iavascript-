@@ -1,5 +1,11 @@
 let works = [];
 
+fetchWorks();
+fetchCategories(); // appel à la fonction permettant le fetch mais aussi le display des boutons filtres
+
+
+
+
 // (1.1) FETCH API  
 
 async function fetchWorks() {
@@ -60,7 +66,7 @@ function displayWorks(works) {
 
 }
 
-fetchWorks();
+
 
 
 
@@ -115,7 +121,7 @@ document.querySelectorAll('#filters button').forEach(button => {
 });
 }
 
-fetchCategories(); // appel à la fonction permettant le fetch mais aussi le display des boutons filtres
+
 
 
 function filterGallery(categoryId) {
