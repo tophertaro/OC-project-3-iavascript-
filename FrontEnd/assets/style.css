@@ -208,7 +208,7 @@ html {
 
 
 
-/* Login Page*/
+/* Login Page */
 
 
 #login {
@@ -286,6 +286,28 @@ html {
 	margin-top: 5em;
 	padding-bottom: 1em;
 
+}
+
+
+/* Modal */
+
+#modal {
+	width: 40%;
+	height: 60%;
+	border: none;
+	border-radius: 10px;
+}
+
+#close-modal {
+	display: flex;
+	justify-content: end;
+}
+
+#modal h3 {
+	display: flex;
+	justify-content: center;
+	font-size: larger;
+	margin-top: 15px;
 }
 
 
