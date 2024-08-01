@@ -1,14 +1,16 @@
 let works = [];
 
-fetchWorks();
+document.addEventListener('DOMContentLoaded', async function() {
+  const works = await fetchWorks();
+  displayWorks(works,'gallery-js');
+});
 fetchCategories(); // appel à la fonction permettant le fetch mais aussi le display des boutons filtres
-
 
 
 
 // (1.1) FETCH API  
 
-async function fetchWorks() {
+export async function fetchWorks() {
 
     try{ //bloc try pour capturer et gérer les erreurs qui pourraient survenir dans le bloc de code try
       const response = await fetch('http://localhost:5678/api/works') // requête http vers l'url 
@@ -17,7 +19,7 @@ async function fetchWorks() {
         throw new Error('Could not fetch works')
       } else { 
         works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
-        displayWorks(works) //après récupération des données, appel la fonction pour afficher les travaux
+        return works;
         
       }
     }
@@ -29,7 +31,7 @@ async function fetchWorks() {
 
 // (1.1) DISPLAY PROJETS ARCHITECTE
 
-function displayWorks(works) { 
+export function displayWorks(works) { 
   let gallery = document.getElementById('gallery-js'); 
   gallery.innerHTML =''; //supprime le contenu html dans la div gallery-js
   
