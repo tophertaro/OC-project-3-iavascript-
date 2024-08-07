@@ -1,10 +1,15 @@
-let works = [];
+// création d'un objet contenant 2 arrays vide pour stocker les données des API
+export const data = { 
+  works: [],
+  categories: []
+}
 
 document.addEventListener('DOMContentLoaded', async function() {
-  const works = await fetchWorks();
-  displayWorks(works,'gallery-js');
+  data.works = await fetchWorks();
+  displayWorks(data.works,'gallery-js');
+  fetchCategories();
 });
-fetchCategories(); // appel à la fonction permettant le fetch mais aussi le display des boutons filtres
+
 
 
 
@@ -12,20 +17,37 @@ fetchCategories(); // appel à la fonction permettant le fetch mais aussi le dis
 
 export async function fetchWorks() {
 
-    try{ //bloc try pour capturer et gérer les erreurs qui pourraient survenir dans le bloc de code try
+    try { //bloc try pour capturer et gérer les erreurs qui pourraient survenir dans le bloc de code try
       const response = await fetch('http://localhost:5678/api/works') // requête http vers l'url 
 
       if(!response.ok){ //si reponse pas ok = lancer une erreur
         throw new Error('Could not fetch works')
       } else { 
-        works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
+        const works = await response.json(); //si reponse ok = await attend que la reponse soit convertie en JSON qui sera stocké dans la const works
         return works;
-        
       }
     }
       catch(error){ //ce bloc gère les erreurs survenue dans le bloc try
         console.error(error)
       }
+}
+
+// (1.2) FETCH CATEGORIES
+
+async function fetchCategories() {
+  try {
+    const response = await fetch ('http://localhost:5678/api/categories');
+
+      if(!response.ok) {
+        throw new Error('Could not fetch categories')
+      } else {
+        data.categories = await response.json()
+        createFilters(data.categories); //appel à la fonction permettant la génération des boutons
+      }
+  }
+  catch (error) {
+    console.error(error);
+  }
 }
 
 
@@ -45,7 +67,6 @@ export function displayWorks(works) {
       </figure>
     `;
   });
-
   gallery.innerHTML = galleryContent; //valeur de galleryContent inséré dans le HTML class gallery
 
   /* Méthode alternatif
@@ -68,34 +89,13 @@ export function displayWorks(works) {
 
 }
 
-
-
-
-
-// (1.2) FETCH CATEGORIES
-
-async function fetchCategories() {
-  try {
-    const response = await fetch ('http://localhost:5678/api/categories');
-
-      if(!response.ok) {
-        throw new Error('Could not fetch categories')
-      } else {
-        const categories = await response.json()
-        createFilters(categories); //appel à la fonction permettant la génération des boutons
-      }
-  }
-  catch (error) {
-    console.error(error);
-  }
-}
 // (1.2) CREATION BOUTONS FILTRE
 
 function createFilters(categories) {
+
+  // création du boutons 'Tous'
   let filters = document.getElementById('filters')
-
   let filtersBtn = '';
-
   filtersBtn += `<button data-category="all">Tous</button>`
   
  /* autre méthode pour ajouter bouton 'Tous'
@@ -109,10 +109,12 @@ function createFilters(categories) {
     ` <button data-category="${category.id}">
         ${category.name}
       </button>`;
+      
+  // display les boutons filtres
+  filters.innerHTML = filtersBtn;
 });
 
-// DISPLAY BOUTONS FILTRES
-filters.innerHTML = filtersBtn;
+
 
 // AJOUT EVENT A CHAQUE BOUTON
 document.querySelectorAll('#filters button').forEach(button => {
@@ -124,15 +126,13 @@ document.querySelectorAll('#filters button').forEach(button => {
 }
 
 
-
-
 function filterGallery(categoryId) {
   let filteredGallery = '';
 
     if (categoryId === 'all') {
-      filteredGallery = works;
+      filteredGallery = data.works;
     } else {
-      filteredGallery = works.filter(work => work.categoryId == categoryId);
+      filteredGallery = data.works.filter(work => work.categoryId == categoryId);
     }
     displayWorks(filteredGallery);
 }
@@ -143,12 +143,21 @@ document.addEventListener('DOMContentLoaded', function() {
       element.style.display = 'flex';
     });
     document.getElementById('filters').style.display = 'none';
-    let loginBtn = document.getElementById('login-btn');
-    loginBtn.innerHTML = '<a href="#" onclick="logout()" style="text-decoration: none;">logout</a>';
+    const loginBtn = document.getElementById('login-btn');
+    loginBtn.innerHTML = '<a href="#" id="logout-btn" style="text-decoration: none;">logout</a>';
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (event) => {
+        event.preventDefault(); 
+        logout(); 
+      });
+    }
   }
 });
 
 function logout() {
-  localStorage.removeItem('token');
-  window.location.href = 'index.html';
+  localStorage.removeItem('token'); // Supprime le jeton de localStorage
+  window.location.href = 'index.html'; // Redirige vers la page logged-out
 }
+
