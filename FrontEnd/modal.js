@@ -1,8 +1,10 @@
 import { data, displayWorks } from "./script.js";
 
-let modal, closeButton;
+let modal = "";
+let closeButton = "";
 
 // PARTIE MODAL
+
 function createModal() {
   // Création de la balise <dialog>
   modal = document.createElement("dialog");
@@ -60,24 +62,44 @@ async function displayWorksInModal(works) {
 
   gallery.innerHTML = galleryContent; //valeur de galleryContent inséré dans le HTML class gallery
   // On ajoute les évènements de suppression.
-  addDeletionEvents();
+  deleteWorks();
 }
 
-function addDeletionEvents() {
+function deleteWorks() {
   const trashes = document.querySelectorAll(".fa-trash-can");
   trashes.forEach((trash) => {
-    console.log(trash);
-    trash.addEventListener("click", function ($event) {
-      // @TODO : Appel API de suppression du work via l'id.
-      fetch().then(() => {
-        const id = $event.target.dataset.id;
-        data.works = data.works.filter((work) => work.id !== Number(id));
-        displayWorks(data.works);
-        displayWorksInModal(data.works);
-      });
+    trash.addEventListener("click", function (event) {
+
+      const id = event.target.dataset.id; // récupère l'ID depuis le dataset
+      const token = localStorage.getItem('token'); // récupère le token de localStorage
+
+      // Appel API pour supprimer les travaux
+      fetch(`http://localhost:5678/api/works/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // token autorisation
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete the work');
+        }
+        return response.json();
+      })
+      .then(() => {
+        const deletion = event.target.closest("div"); 
+        if (deletion) {
+          deletion.remove(); // supprime l'élément du DOM
+        }
+        data.works = data.works.filter((work) => work.id !== Number(id)); // met à jour le modèle de données
+      })
+      .catch(error => console.error('Error:', error));
     });
   });
 }
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   createModal();

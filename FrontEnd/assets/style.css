@@ -292,13 +292,12 @@ html {
 /* Modal */
 
 #modal {
-	width: 40%;
 	height: 60%;
 	border: none;
 	border-radius: 10px;
 }
 
-#close-modal {
+#close-btn {
 	display: flex;
 	justify-content: end;
 }
